@@ -37,21 +37,36 @@ def sosedi(posm, xmax, ymax, steni):
     
     return kletki
 
+#def ygolki(pole, xmax, ymax):
+#    ygolkii = []
+#    for x in range(xmax):
+#        for y in range(ymax):
+#            posm = [x, y]
+#            sos = sosedi(posm, xmax, ymax, pole)
+#            koll = 0
+#            for i in range(len(sos)):
+#                rar = sos[i]
+#                fx = rar[0]
+#                fy = rar[1]
+#                if pole[fx, fy] == 1:
+#                    koll += 1
+#            if koll == 1 or koll == 5:
+#                ygolkii.append([x, y])
+#    return ygolkii
+
 def ygolki(pole, xmax, ymax):
     ygolkii = []
+    
     for x in range(xmax):
         for y in range(ymax):
-            posm = [x, y]
-            sos = sosedi(posm, xmax, ymax, pole)
-            koll = 0
-            for i in range(len(sos)):
-                rar = sos[i]
-                fx = rar[0]
-                fy = rar[1]
-                if pole[fx, fy] == 1:
-                    koll += 1
-            if koll == 1 or koll == 5:
-                ygolkii.append([x, y])
+            # Проверяем только клетки со значением 0
+            if pole[x][y] == 0:
+                # Проверяем, находится ли клетка в углу поля
+                is_corner = (x == 0 or x == xmax-1) and (y == 0 or y == ymax-1)
+                
+                if is_corner:
+                    ygolkii.append([x, y])
+    
     return ygolkii
 
 def kvadrat(koord1, koord2, lok):
