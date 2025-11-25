@@ -44,15 +44,14 @@ def ygolki(pole, xmax, ymax):
             posm = [x, y]
             sos = sosedi(posm, xmax, ymax, pole)
             koll = 0
-            for i in range(len(sos)):
-                rar = sos[i]
-                fx = rar[0]
-                fy = rar[1]
+            for i in sos:
+                fx = i[0]
+                fy = i[1]
                 if pole[fx, fy] == 1:
                     koll += 1
                 print(koll)
-            # if koll == 1 or koll == 5 or koll == 0:
-            #     ygolkii.append([x, y])
+            if koll == 1 or koll == 5:
+                ygolkii.append([x, y])
     return ygolkii
 
 
