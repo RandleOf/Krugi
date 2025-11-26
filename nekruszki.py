@@ -49,7 +49,7 @@ def ygolki(pole, xmax, ymax):
                 fy = i[1]
                 if pole[fx, fy] == 1:
                     koll += 1
-                print(koll)
+                acce
             if koll == 1 or koll == 5:
                 ygolkii.append([x, y])
     return ygolkii
