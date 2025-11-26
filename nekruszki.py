@@ -37,22 +37,8 @@ def sosedi(posm, xmax, ymax, steni):
     
     return kletki
 
-def ygolki(pole, xmax, ymax):
-    ygolkii = []
-    for x in range(xmax):
-        for y in range(ymax):
-            posm = [x, y]
-            sos = sosedi(posm, xmax, ymax, pole)
-            koll = 0
-            for i in sos:
-                fx = i[0]
-                fy = i[1]
-                if pole[fx, fy] == 1:
-                    koll += 1
-                acce
-            if koll == 1 or koll == 5:
-                ygolkii.append([x, y])
-    return ygolkii
+def ugolki(pole, xmax, ymax):
+    
 
 
 
@@ -106,7 +92,7 @@ pole = matr(xmax, ymax, 0)
 #region основа
 kvadrat([0,0], [30,30], pole)
 
-ygolki(pole, xmax, ymax)
+ugolki(pole, xmax, ymax)
 
 
     
