@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-#region помощь
+#region -помощь
 
 #создание матрици xmax на ymax членов
 def matr(xmax, ymax, c): 
@@ -34,6 +34,29 @@ def sosedi(posm, xmax, ymax, steni):
             # Проверяем, нет ли стены
             if steni[new_x, new_y] == 0:
                 kletki.append(np.array([new_x, new_y]))
+    
+    return kletki
+
+def sosedi_plus(posm, xmax, ymax):
+    kletki = []
+    x = posm[0]
+    y = posm[1]
+    
+    # Все 8 возможных направлений (включая диагонали)
+    directions = [
+        (1, 0), (0, -1), 
+        (-1, 0), (0, 1) 
+    ]
+    
+    for dx, dy in directions:
+        new_x = x + dx
+        new_y = y + dy
+        
+        # Проверяем границы
+        if 0 <= new_x < xmax and 0 <= new_y < ymax:
+            # Проверяем, нет ли стены
+
+            kletki.append(np.array([new_x, new_y]))
     
     return kletki
 
@@ -74,8 +97,6 @@ def ugolki(pole, xmax, ymax):
                         koll+=1
                 if koll == 1:
                     ygolki.append([x, y])
-
-
 
 def kvadrat(koord1, koord2, lok):
     # ИСПРАВЛЕНИЕ: правильно вычисляем размеры квадрата
@@ -157,28 +178,27 @@ def segments_intersect(p1, p2, p3, p4):
     
     return False
 
-#region основные def
+def mini_otrezki(pole, xmax, ymax):
+    otreski = []
+    for x in range(xmax):
+        for y in range(ymax):
+            if pole[x, y] == 1:
+                otreski.append([(x, y), (x, y)])
+                for sosed in sosedi_plus([x, y], xmax, ymax):
+                    if pole(sosed)==1:
+                        otreski.append([(x,y), sosed])
+    return otreski
 
-#def massivi(start_pos, pole, xmax, ymax):
-#
-#    p = [xmax-start_pos[0], start_pos[0], ymax-start_pos[1], start_pos[1]]
-#    iteration = max(p)
-#    masssivi = []
-#    for i in range(iteration):
-#        massssivi = []
-#        for j in [start_pos[0]-i,start_pos[0]+i]:
-#            for l in range(start_pos[1]-i,start_pos[1]+i):
-#                if pole[j,l] != 0:
-#                    massssivi.append(np.array([j, l]))
-#        for j in [start_pos[1]-i,start_pos[1]+i]:
-#            for l in range(start_pos[0]-i,start_pos[0]+i):
-#                if pole[l,j] != 0:
-#                    massssivi.append(np.array([l, j])) 
-#        masssivi.append(massssivi)       
+
+#region -основные def
+
+#def massiv(start_pos, pole):
 
 
 
-#region начальные условия
+
+
+#region -начальные условия
 
 start_pos = np.array([0,50])
 final_pos = np.array([50,0])
@@ -186,7 +206,7 @@ xmax = 100
 ymax = 100
 pole = matr(xmax, ymax, 0)
 
-#region основа
+#region -основа
 kvadrat([0,0], [1,1], pole)
 
 
