@@ -157,45 +157,69 @@ def segments_intersect(p1, p2, p3, p4):
     
     # Общий случай (отрезки не коллинеарны)
     if o1 != o2 and o3 != o4:
-        return True
+        return False
     
     # Специальные случаи (коллинеарность)
     # p1, p2 и p3 коллинеарны и p3 лежит на отрезке p1p2
     if o1 == 0 and on_segment(p1, p3, p2):
-        return True
+        return False
     
     # p1, p2 и p4 коллинеарны и p4 лежит на отрезке p1p2
     if o2 == 0 and on_segment(p1, p4, p2):
-        return True
+        return False
     
     # p3, p4 и p1 коллинеарны и p1 лежит на отрезке p3p4
     if o3 == 0 and on_segment(p3, p1, p4):
-        return True
+        return False
     
     # p3, p4 и p2 коллинеарны и p2 лежит на отрезке p3p4
     if o4 == 0 and on_segment(p3, p2, p4):
-        return True
+        return False
     
-    return False
+    return True
 
 def mini_otrezki(pole, xmax, ymax):
     otreski = []
     for x in range(xmax):
         for y in range(ymax):
             if pole[x, y] == 1:
-                otreski.append([(x, y), (x, y)])
+                otreski.append([[x, y], [x, y]])
                 for sosed in sosedi_plus([x, y], xmax, ymax):
                     if pole(sosed)==1:
-                        otreski.append([(x,y), sosed])
+                        otreski.append([[x,y], sosed])
     return otreski
 
 
 #region -основные def
 
-#def massiv(start_pos, pole):
+def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......]],........]
+    masiv = []
+    ugli = ugolki(pole, xmax, ymax)
+    otr = mini_otrezki(pole, xmax, ymax)
+    sf=[]
 
+    for ugolok in ugli:
+        x1 = start_pos[0]
+        y1 = start_pos[1]
+        x2 = ugolok[0]
+        y2 = ugolok[1]
+        if segments_intersect(x1, y1, x2, y2):
+            sf.append(ugolok)
+    masiv.append([start_pos, sf])
+    sf=[]
 
+    for ugolok in ugli:        
+        x1 = final_pos[0]
+        y1 = final_pos[1]
+        x2 = ugolok[0]
+        y2 = ugolok[1]
+        if segments_intersect(x1, y1, x2, y2):
+            sf.append(ugolok)   
+    masiv.append([final_pos, sf])
 
+#    for i in ugli:
+#        for j in ugli:
+    return masiv
 
 
 #region -начальные условия
@@ -209,7 +233,7 @@ pole = matr(xmax, ymax, 0)
 #region -основа
 kvadrat([0,0], [1,1], pole)
 
-
+print(massiv(start_pos, final_pos, pole, xmax, ymax))
 
 
     
