@@ -202,30 +202,23 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
     sf=[]
     ugli.append(start_pos.tolist())
     ugli.append(final_pos.tolist())
+    
     for ugolos in ugli:
         minimassiv = []
-        for ugol in ugli:
-            pravda = True
-            if ugolos[0] != ugol[0] and ugolos[1] != ugol[1]:
+        for ugol in ugli:            
+            if ugolos[0] != ugol[0] or ugolos[1] != ugol[1]:
+                pravda = True
                 for ot in otr:
                     p1ot = ot[0]
                     p2ot = ot[1]
-                    if segments_intersect(p1ot, p2ot, ugol, ugolos):
-                        
+                    if segments_intersect(p1ot, p2ot, ugol, ugolos):                        
                         pravda = False
+                        break
                 if pravda:        
                     #print(ugol)            
                     minimassiv.append(ugol)
                     
         sf.append([ugolos, minimassiv])
-
-
-
-
-    
-
-#    for i in ugli:
-#        for j in ugli:
     return sf
 
 
