@@ -232,11 +232,11 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
 #region -начальные условия
 
 start_pos = np.array([0,50])
-final_pos = np.array([50,0])
+final_pos = np.array([50,50])
 xmax = 100
 ymax = 100
 pole = matr(xmax, ymax, 0)
-kvadrat([0,0], [1,1], pole)
+kvadrat([10,10], [90,40], pole)
 
 
 
