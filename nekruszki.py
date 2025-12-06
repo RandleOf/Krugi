@@ -200,8 +200,8 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
     ugli = ugolki(pole, xmax, ymax)
     otr = mini_otrezki(pole, xmax, ymax)
     sf=[]
-    ugli.append(start_pos)
-    ugli.append(final_pos)
+    ugli.append(start_pos.tolist())
+    ugli.append(final_pos.tolist())
     for ugolos in ugli:
         minimassiv = []
         for ugol in ugli:
@@ -211,9 +211,12 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
                     p1ot = ot[0]
                     p2ot = ot[1]
                     if segments_intersect(p1ot, p2ot, ugol, ugolos):
+                        
                         pravda = False
-                if pravda:
+                if pravda:        
+                    #print(ugol)            
                     minimassiv.append(ugol)
+                    
         sf.append([ugolos, minimassiv])
 
 
@@ -223,7 +226,7 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
 
 #    for i in ugli:
 #        for j in ugli:
-    return masiv
+    return sf
 
 
 #region -начальные условия
