@@ -97,6 +97,7 @@ def ugolki(pole, xmax, ymax):
                         koll+=1
                 if koll == 1:
                     ygolki.append([x, y])
+    return ygolki
 
 def kvadrat(koord1, koord2, lok):
     # ИСПРАВЛЕНИЕ: правильно вычисляем размеры квадрата
@@ -157,26 +158,26 @@ def segments_intersect(p1, p2, p3, p4):
     
     # Общий случай (отрезки не коллинеарны)
     if o1 != o2 and o3 != o4:
-        return False
+        return True
     
     # Специальные случаи (коллинеарность)
     # p1, p2 и p3 коллинеарны и p3 лежит на отрезке p1p2
     if o1 == 0 and on_segment(p1, p3, p2):
-        return False
+        return True
     
     # p1, p2 и p4 коллинеарны и p4 лежит на отрезке p1p2
     if o2 == 0 and on_segment(p1, p4, p2):
-        return False
+        return True
     
     # p3, p4 и p1 коллинеарны и p1 лежит на отрезке p3p4
     if o3 == 0 and on_segment(p3, p1, p4):
-        return False
+        return True
     
     # p3, p4 и p2 коллинеарны и p2 лежит на отрезке p3p4
     if o4 == 0 and on_segment(p3, p2, p4):
-        return False
+        return True
     
-    return True
+    return False
 
 def mini_otrezki(pole, xmax, ymax):
     otreski = []
@@ -185,8 +186,10 @@ def mini_otrezki(pole, xmax, ymax):
             if pole[x, y] == 1:
                 otreski.append([[x, y], [x, y]])
                 for sosed in sosedi_plus([x, y], xmax, ymax):
-                    if pole(sosed)==1:
-                        otreski.append([[x,y], sosed])
+                    xs = sosed[0]
+                    ys = sosed[1]
+                    if pole[xs, ys]==1:
+                        otreski.append([[x,y], sosed.tolist()])
     return otreski
 
 
@@ -197,25 +200,26 @@ def massiv(start_pos, final_pos, pole, xmax, ymax):   #[[(x, y), [(x0,y0),......
     ugli = ugolki(pole, xmax, ymax)
     otr = mini_otrezki(pole, xmax, ymax)
     sf=[]
+    ugli.append(start_pos)
+    ugli.append(final_pos)
+    for ugolos in ugli:
+        minimassiv = []
+        for ugol in ugli:
+            pravda = True
+            if ugolos[0] != ugol[0] and ugolos[1] != ugol[1]:
+                for ot in otr:
+                    p1ot = ot[0]
+                    p2ot = ot[1]
+                    if segments_intersect(p1ot, p2ot, ugol, ugolos):
+                        pravda = False
+                if pravda:
+                    minimassiv.append(ugol)
+        sf.append([ugolos, minimassiv])
 
-    for ugolok in ugli:
-        x1 = start_pos[0]
-        y1 = start_pos[1]
-        x2 = ugolok[0]
-        y2 = ugolok[1]
-        if segments_intersect(x1, y1, x2, y2):
-            sf.append(ugolok)
-    masiv.append([start_pos, sf])
-    sf=[]
 
-    for ugolok in ugli:        
-        x1 = final_pos[0]
-        y1 = final_pos[1]
-        x2 = ugolok[0]
-        y2 = ugolok[1]
-        if segments_intersect(x1, y1, x2, y2):
-            sf.append(ugolok)   
-    masiv.append([final_pos, sf])
+
+
+    
 
 #    for i in ugli:
 #        for j in ugli:
@@ -229,9 +233,17 @@ final_pos = np.array([50,0])
 xmax = 100
 ymax = 100
 pole = matr(xmax, ymax, 0)
+kvadrat([0,0], [1,1], pole)
+
+
+
+
+
+
+
 
 #region -основа
-kvadrat([0,0], [1,1], pole)
+
 
 print(massiv(start_pos, final_pos, pole, xmax, ymax))
 
