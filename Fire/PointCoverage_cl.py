@@ -5,13 +5,6 @@ from matplotlib.patches import Circle
 import random
 import math
 
-def generate_random_wall():
-    """Генерирует случайные координаты стенки"""
-    wall_x = random.randint(1, 100)      # Не на краю
-    wall_y_start = random.randint(1, 100)
-    wall_height = random.randint(3, 6)
-    return wall_x, wall_y_start, wall_height
-
 class PointCoverage:
     def __init__(self, field_size=100, radius=12, max_points=25):
         self.field_size = field_size
