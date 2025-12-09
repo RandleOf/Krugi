@@ -23,6 +23,7 @@ class PointCoverage:
                 return False
         return True
     
+    # region Начальное решение
     def initialize_points(self, num_points):
         """Инициализация начального расположения точек (центры только внутри поля)"""
         self.points = []
@@ -41,7 +42,8 @@ class PointCoverage:
         
         if len(self.points) < num_points:
             print(f"Предупреждение: удалось разместить только {len(self.points)} из {num_points} точек")
-    
+
+    # region Метод Монте-Карло
     def calculate_coverage_with_overlap(self):
         """Вычисление покрытой площади методом Монте-Карло (учитывается только поле)"""
         if not self.points:
@@ -62,6 +64,7 @@ class PointCoverage:
         
         return covered_samples / num_samples
     
+    # region Целевая функция
     def objective_function(self):
         """Целевая функция: только покрытие поля"""
         return self.calculate_coverage_with_overlap()
@@ -135,6 +138,7 @@ class PointCoverage:
         
         return best_solution, final_coverage
     
+    # region Новое решение
     def generate_neighbor(self, solution):
         """Генерация соседнего решения для максимизации покрытия с учетом минимального расстояния"""
         new_solution = [point.copy() for point in solution]
