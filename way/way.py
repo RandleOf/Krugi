@@ -347,21 +347,23 @@ def visualize_best_result(pole, start_pos, final_pos, best_path, best_length, be
 
 #region -начальные условия
 start_pos = np.array([50, 0])
-final_pos = np.array([20, 80])
+final_pos = np.array([60, 75])
 xmax = 100
 ymax = 100
 pole = matr(xmax, ymax, 0)
-kolit = 150  # количество итераций
+kolit = 100  # количество итераций
 kolmy = 150  # количество муравьев на итерацию
 
 # Создаем препятствие (квадрат)
 kvadrat([90, 10], [95, 95], pole)
 kvadrat([5, 5], [95, 15], pole)
-kvadrat([5, 30], [87, 40], pole)
+kvadrat([5, 60], [40, 61], pole)
 kvadrat([5, 30], [10, 95], pole)
 kvadrat([5, 90], [95, 95], pole)
-kvadrat([65, 35], [70, 60], pole)
-# kvadrat([20, 55], [70, 60], pole)
+kvadrat([65, 35], [70, 80], pole)
+kvadrat([39, 35], [40, 60], pole)
+kvadrat([39, 35], [70, 36], pole)
+kvadrat([20, 79], [70, 80], pole)
 
 # Инициализируем феромоны
 fer = matr(xmax, ymax, 0.1)  # начальный уровень феромонов
