@@ -8,4 +8,8 @@
 
 <img width="561" height="603" alt="image" src="https://github.com/user-attachments/assets/babb5267-65e0-4743-bc89-76dc6a7346cf" />
 
+<<<<<<< HEAD
 <img width="590" height="627" alt="image" src="https://github.com/user-attachments/assets/7a23ccd2-ccda-47de-8f92-3697f16e8398" />
+=======
+<img width="589" height="596" alt="image" src="https://github.com/user-attachments/assets/0e0c89b0-e470-41bd-bfa3-1586f1e95fa8" />
+>>>>>>> devRan

@@ -1,2 +1,6 @@
 *.venv*
+<<<<<<< HEAD
 *__pycashe__* 
+=======
+*__pycache__* 
+>>>>>>> devRan

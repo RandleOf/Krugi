@@ -5,6 +5,7 @@ from matplotlib.patches import Circle
 import math
 from PointCoverage_cl import PointCoverage
 
+# region Обновление анимации
 def animate_optimization(field_size=100, radius=15, max_points=25):
     """Создание анимации процесса оптимизации"""
     
@@ -31,7 +32,8 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
         current_solution = coverage.solution_history[frame]
         current_coverage = coverage.coverage_history[frame] * 100
         best_coverage_current = coverage.best_coverage_history[frame] * 100
-        
+
+        # region График 1.1
         # График 1: Покрытие поля
         ax1.set_xlim(-radius, field_size + radius)
         ax1.set_ylim(-radius, field_size + radius)
@@ -60,7 +62,8 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
                     distance = math.sqrt((x - x2)**2 + (y - y2)**2)
                     if distance < radius * 2:  # Показываем линии для близких точек
                         ax1.plot([x, x2], [y, y2], 'gray', alpha=0.3, linewidth=1)
-        
+
+        # region График 1.2
         # График 2: Эволюция покрытия
         ax2.plot([c*100 for c in coverage.coverage_history[:frame+1]], 'b-', alpha=0.7, label='Текущее')
         ax2.plot([c*100 for c in coverage.best_coverage_history[:frame+1]], 'r-', linewidth=2, label='Лучшее')
@@ -71,6 +74,7 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
         ax2.legend()
         ax2.grid(True, alpha=0.3)
         
+        # region График 1.3
         # График 3: Эволюция энергии (покрытия)
         ax3.plot(coverage.energy_history[:frame+1], 'g-', linewidth=2)
         ax3.set_title('Эволюция целевой функции')
@@ -79,6 +83,7 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
         ax3.set_ylim(0, 1)
         ax3.grid(True, alpha=0.3)
         
+        # region График 1.4
         # График 4: Количество точек
         point_counts = [len(sol) for sol in coverage.solution_history[:frame+1]]
         ax4.plot(point_counts, 'purple', linewidth=2)
@@ -106,6 +111,7 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
     
     plt.figure(figsize=(15, 5))
     
+    # region График 2.1
     # Левый график - финальное расположение
     plt.subplot(1, 3, 1)
     plt.xlim(-radius, field_size + radius)
@@ -135,6 +141,7 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
                 if distance < radius * 2:  # Показываем линии для близких точек
                     plt.plot([x, x2], [y, y2], 'gray', alpha=0.3, linewidth=1)
     
+    # region График 2.2
     # Средний график - история лучшего покрытия
     plt.subplot(1, 3, 2)
     plt.plot([c*100 for c in coverage.best_coverage_history], 'r-', linewidth=2)
@@ -143,6 +150,7 @@ def animate_optimization(field_size=100, radius=15, max_points=25):
     plt.ylabel('Покрытие (%)')
     plt.grid(True, alpha=0.3)
     
+    # region График 2.3
     # Правый график - метрики эффективности
     plt.subplot(1, 3, 3)
     efficiency = final_coverage / len(best_solution) if len(best_solution) > 0 else 0
