@@ -147,6 +147,7 @@ def create_binary_matrix():
         text3 = font.render("Кисть 5x5", True, WHITE)
         screen.blit(text3, (panel_x + 65, 162))
         
+
         # Инструкция
         instr_font = pygame.font.SysFont(None, 20)
         instr1 = instr_font.render("ЛКМ - рисовать черным", True, BLACK)
