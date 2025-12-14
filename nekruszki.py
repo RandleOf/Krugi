@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import random
-
+from osnovanekruszkov import create_binary_matrix
 #region -помощь
 
 def finish(posm, final_pos):
@@ -355,12 +355,11 @@ kolit = 10  # количество итераций
 kolmy = 10  # количество муравьев на итерацию
 
 # Создаем препятствие (квадрат)
-kvadrat([10, 10], [90, 40], pole)
-
+pole = create_binary_matrix()
 # Инициализируем феромоны
 fer = matr(xmax, ymax, 0.1)  # начальный уровень феромонов
 l = 1  # вес феромонов
-m = 2  # вес эвристики
+m = 0  # вес эвристики
 
 # Устанавливаем высокий уровень феромонов в стартовой точке
 fer[start_pos[0], start_pos[1]] = 1.0
