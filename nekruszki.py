@@ -355,7 +355,7 @@ kolit = 10  # количество итераций
 kolmy = 10  # количество муравьев на итерацию
 
 # Создаем препятствие (квадрат)
-pole = create_binary_matrix()
+pole = create_binary_matrix(start_pos, final_pos)
 # Инициализируем феромоны
 fer = matr(xmax, ymax, 0.1)  # начальный уровень феромонов
 l = 1  # вес феромонов

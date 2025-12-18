@@ -1,10 +1,14 @@
 import pygame
 import numpy as np
 
-def create_binary_matrix():
+def create_binary_matrix(point1=None, point2=None):
     """
     Функция создает интерактивное окно для рисования бинарной матрицы 100x100.
     Возвращает массив NumPy размером 100x100 со значениями 0 и 1.
+    
+    Parameters:
+    point1, point2: кортежи (x, y) - координаты двух защищенных точек
+                    (координаты в сетке, от 0 до 99)
     """
     # Инициализация Pygame
     pygame.init()
@@ -21,6 +25,8 @@ def create_binary_matrix():
     GRAY = (100, 100, 100)
     BLUE = (70, 130, 180)
     RED = (220, 60, 60)
+    PROTECTED_RED = (255, 50, 50)  # Более яркий красный для защищенных точек
+    PREVIEW_RED = (255, 100, 100, 100)  # Полупрозрачный красный для предпросмотра
     
     # Создание окна
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -33,6 +39,16 @@ def create_binary_matrix():
     brush_size = 1  # Размер кисти (1x1, 3x3, 5x5)
     drawing = False  # Флаг рисования
     erasing = False  # Флаг стирания
+    
+    # Защищенные точки (нельзя перекрасить)
+    protected_points = []
+    if point1 is not None:
+        # Проверяем валидность координат
+        if 0 <= point1[0] < GRID_SIZE and 0 <= point1[1] < GRID_SIZE:
+            protected_points.append((point1[0], point1[1]))
+    if point2 is not None:
+        if 0 <= point2[0] < GRID_SIZE and 0 <= point2[1] < GRID_SIZE:
+            protected_points.append((point2[0], point2[1]))
     
     # Основной цикл игры
     running = True
@@ -95,7 +111,16 @@ def create_binary_matrix():
                     for dy in range(-half_size, half_size + 1):
                         for dx in range(-half_size, half_size + 1):
                             nx, ny = grid_x + dx, grid_y + dy
-                            if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE:
+                            
+                            # Проверяем, не является ли клетка защищенной
+                            is_protected = False
+                            for px, py in protected_points:
+                                if nx == px and ny == py:
+                                    is_protected = True
+                                    break
+                            
+                            # Если клетка не защищена, то можем изменять её
+                            if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE and not is_protected:
                                 if drawing:
                                     matrix[ny][nx] = 1  # Рисуем черным
                                 elif erasing:
@@ -107,7 +132,18 @@ def create_binary_matrix():
         # Рисуем клетки
         for y in range(GRID_SIZE):
             for x in range(GRID_SIZE):
-                color = WHITE if matrix[y][x] == 0 else BLACK
+                # Проверяем, является ли текущая клетка защищенной точкой
+                is_protected = False
+                for px, py in protected_points:
+                    if x == px and y == py:
+                        is_protected = True
+                        break
+                
+                if is_protected:
+                    color = PROTECTED_RED  # Красный для защищенных точек
+                else:
+                    color = WHITE if matrix[y][x] == 0 else BLACK
+                
                 pygame.draw.rect(screen, color, 
                                 (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
                 pygame.draw.rect(screen, GRAY, 
@@ -147,7 +183,6 @@ def create_binary_matrix():
         text3 = font.render("Кисть 5x5", True, WHITE)
         screen.blit(text3, (panel_x + 65, 162))
         
-
         # Инструкция
         instr_font = pygame.font.SysFont(None, 20)
         instr1 = instr_font.render("ЛКМ - рисовать черным", True, BLACK)
@@ -168,15 +203,25 @@ def create_binary_matrix():
         brush_text = font.render(f"Текущая кисть: {brush_size}x{brush_size}", True, BLACK)
         screen.blit(brush_text, (panel_x + 30, 310))
         
+        # Отображение защищенных точек
+        protected_text = font.render("Защищенные точки:", True, BLACK)
+        screen.blit(protected_text, (panel_x + 30, 340))
+        
+        for i, (px, py) in enumerate(protected_points):
+            point_text = font.render(f"Точка {i+1}: ({px}, {py})", True, BLACK)
+            screen.blit(point_text, (panel_x + 30, 365 + i * 25))
+        
         # Статистика
         black_cells = np.sum(matrix)
         stats_text1 = font.render(f"Черных: {black_cells}", True, BLACK)
         stats_text2 = font.render(f"Белых: {GRID_SIZE*GRID_SIZE - black_cells}", True, BLACK)
-        stats_text3 = font.render(f"Всего: {GRID_SIZE*GRID_SIZE}", True, BLACK)
+        stats_text3 = font.render(f"Защищенных: {len(protected_points)}", True, BLACK)
+        stats_text4 = font.render(f"Всего: {GRID_SIZE*GRID_SIZE}", True, BLACK)
         
-        screen.blit(stats_text1, (panel_x + 30, 350))
-        screen.blit(stats_text2, (panel_x + 30, 380))
-        screen.blit(stats_text3, (panel_x + 30, 410))
+        screen.blit(stats_text1, (panel_x + 30, 420))
+        screen.blit(stats_text2, (panel_x + 30, 450))
+        screen.blit(stats_text3, (panel_x + 30, 480))
+        screen.blit(stats_text4, (panel_x + 30, 510))
         
         # Предварительный просмотр кисти (если курсор над полем)
         if not mouse_over_panel and mouse_pos[0] < panel_x:
@@ -190,15 +235,30 @@ def create_binary_matrix():
                 for dx in range(-half_size, half_size + 1):
                     nx, ny = grid_x + dx, grid_y + dy
                     if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE:
-                        # Рисуем полупрозрачную подсветку
-                        preview_surface = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-                        preview_color = (255, 0, 0, 100) if drawing or not (drawing or erasing) else (0, 0, 255, 100)
-                        preview_surface.fill(preview_color)
-                        screen.blit(preview_surface, (nx * CELL_SIZE, ny * CELL_SIZE))
+                        # Проверяем, не является ли клетка защищенной
+                        is_protected = False
+                        for px, py in protected_points:
+                            if nx == px and ny == py:
+                                is_protected = True
+                                break
+                        
+                        # Если клетка защищена, подсвечиваем её отдельным цветом
+                        if is_protected:
+                            preview_surface = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+                            preview_surface.fill(PREVIEW_RED)
+                            screen.blit(preview_surface, (nx * CELL_SIZE, ny * CELL_SIZE))
+                        else:
+                            # Обычная подсветка для незащищенных клеток
+                            preview_surface = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+                            preview_color = (255, 0, 0, 100) if drawing or not (drawing or erasing) else (0, 0, 255, 100)
+                            preview_surface.fill(preview_color)
+                            screen.blit(preview_surface, (nx * CELL_SIZE, ny * CELL_SIZE))
         
         pygame.display.flip()
     
     pygame.quit()
     
-    # Возвращаем созданную матрицу
+    # Возвращаем созданную матрицу (защищенные точки остаются 0 в матрице)
     return matrix
+
+
